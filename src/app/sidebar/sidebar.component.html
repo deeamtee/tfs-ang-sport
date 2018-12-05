@@ -1,0 +1,28 @@
+<nav>
+  <h4 class="user">{{(user$ | async)?.email | useremail}}</h4>
+  <ul class="main-list">
+    <li class="main-item">
+      <a routerLink=""
+         class="main-link">Домой</a>
+    </li>
+    <li class="main-item">
+      <a routerLink="/profile"
+         class="main-link">Профиль</a>
+    </li>
+    <li class="main-item">
+      <a routerLink="/train"
+         class="main-link">Тренировки</a>
+    </li>
+    <li class="main-item" *ngIf="!(user$ | async); else logout">
+      <a routerLink="/login"
+         routerLinkActive="active"
+         class="main-link">Войти</a>
+    </li>
+    <ng-template #logout>
+      <li class="main-item">
+        <a (click)="logoutClick()"
+           class="main-link">Выйти</a>
+      </li>
+    </ng-template>
+  </ul>
+</nav>
