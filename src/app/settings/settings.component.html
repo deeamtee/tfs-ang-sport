@@ -1,0 +1,37 @@
+<div class="justify-content-center">
+  <h1>Добавить имя и фото профиля</h1>
+  <div class="col-lg-8">
+    <div class="container">
+<form [formGroup]="form" (submit)="onSubmit()">
+  <div class="form-group">
+    <input type="text"
+           class="form-control"
+           [class.is-invalid]="form.get('name').invalid && form.get('name').touched"
+           formControlName="name"
+           placeholder="Имя">
+    <div class="invalid-feedback">
+      {{getErrors(form.get('name'))}}
+    </div>
+  </div>
+  <div class="form-group">
+    <input type="text"
+           class="form-control"
+           [class.is-invalid]="form.get('photoURL').invalid && form.get('photoURL').touched"
+           formControlName="photoURL"
+           placeholder="Ссылка на фото">
+    <div class="invalid-feedback">
+      {{getErrors(form.get('photoURL'))}}
+    </div>
+  </div>
+
+  <div class="form-group">
+    <button type="submit"
+            [disabled]="form.pristine || form.invalid"
+            class="btn btn-success btn-block">
+      Готово
+    </button>
+  </div>
+</form>
+</div>
+</div>
+</div>

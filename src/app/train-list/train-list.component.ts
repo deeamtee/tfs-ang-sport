@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {ITrain} from '../model/i-train';
 import {TrainListService} from './train-list.service';
 import {takeUntil} from 'rxjs/operators';
-import {IWallet} from '../model/iwallet';
+import {ITrain} from '../model/ITrain';
 
 @Component({
   selector: 'tfs-train-list',
@@ -11,21 +10,23 @@ import {IWallet} from '../model/iwallet';
   styleUrls: ['./train-list.component.css']
 })
 export class TrainListComponent implements OnInit {
-  wallets$: Observable<IWallet[]>;
+  trains$: Observable<ITrain[]>;
   private destroy$ = new Subject<void>();
 
-  constructor(private walletListService: TrainListService) { }
+  constructor(private trainListService: TrainListService) { }
 
   ngOnInit() {
-    this.wallets$ = this.walletListService.getWallets();
+    this.trains$ = this.trainListService.getTrains();
+
   }
 
   ngOnDestroy() {
     this.destroy$.next();
   }
 
+
   addWallet() {
-    this.walletListService.addWallet()
+    this.trainListService.addTrain()
       .pipe(
         takeUntil(this.destroy$)
       )

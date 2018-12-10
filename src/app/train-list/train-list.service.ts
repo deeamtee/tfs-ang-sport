@@ -3,8 +3,7 @@ import {AngularFireDatabase} from '@angular/fire/database';
 import {AuthService} from '../auth/auth.service';
 import {Observable, of} from 'rxjs';
 import {filter, map, switchMap, take} from 'rxjs/operators';
-import {ITrain} from '../model/i-train';
-import {IWallet} from '../model/iwallet';
+import {ITrain} from '../model/ITrain';
 
 @Injectable({
   providedIn: 'root'
@@ -14,44 +13,45 @@ export class TrainListService {
               private authService: AuthService) {
   }
 
-  getWalletById(walletId: string): Observable<IWallet> {
+  getTrainById(trainId: string): Observable<ITrain> {
     return this.getUserId()
       .pipe(
-        switchMap(uid => this.db.object<IWallet>(`users/${uid}/wallets/${walletId}`).valueChanges()),
-        map((wallet) => wallet ? {...wallet, id: walletId} : wallet)
+        switchMap(uid => this.db.object<ITrain>(`users/${uid}/trains/${trainId}`).valueChanges()),
+        map((train) => train ? {...train, id: trainId} : train)
       );
   }
 
-  getWallets(): Observable<IWallet[]> {
+  getTrains(): Observable<ITrain[]> {
     return this.authService.getUser$()
       .pipe(
-        switchMap(user => user ? this.getWalletsByUserId(user.uid) : of([]))
+        switchMap(user => user ? this.getTrainsByUserId(user.uid) : of([]))
       );
   }
 
-  addWallet() {
+
+
+  addTrain() {
     return this.getUserId()
       .pipe(
         take(1),
-        map(uid => this.db.list(`users/${uid}/wallets`)),
+        map(uid => this.db.list(`users/${uid}/trains`)),
         switchMap(list => list.push({
-          name: 'Новая тренировка',
-          amount: 10000
+          name: 'День'
         }))
       );
   }
 
-  updateWallet(wallet: IWallet): Observable<any> {
+  updateTrain(train: ITrain): Observable<any> {
     return this.getUserId()
       .pipe(
         take(1),
-        map((uid) => this.db.object(`users/${uid}/wallets/${wallet.id}`)),
-        switchMap(object => object.update(wallet))
+        map((uid) => this.db.object(`users/${uid}/trains/${train.id}`)),
+        switchMap(object => object.update(train))
       );
   }
 
-  private getWalletsByUserId(uid: string) {
-    return this.db.list<IWallet>(`users/${uid}/wallets`)
+  private getTrainsByUserId(uid: string) {
+    return this.db.list<ITrain>(`users/${uid}/trains`)
       .snapshotChanges()
       .pipe(
         map(snapshots => snapshots.map(({key, payload}) => ({id: key, ...payload.val()})))

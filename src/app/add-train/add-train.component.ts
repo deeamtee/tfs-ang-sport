@@ -1,8 +1,8 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {IPurchase} from '../model/i-purchase';
+import {ITraining} from '../model/i-training';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 
-const digitRegex = /^\d*\.?\d+$/;
+const digitRegex = /^\d*-?\d+$/;
 
 @Component({
   selector: 'tfs-add-train',
@@ -10,7 +10,7 @@ const digitRegex = /^\d*\.?\d+$/;
   styleUrls: ['./add-train.component.css']
 })
 export class AddTrainComponent implements OnInit {
-  @Output() addPurchase = new EventEmitter<IPurchase>();
+  @Output() addTraining = new EventEmitter<ITraining>();
   form: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {
@@ -50,9 +50,9 @@ export class AddTrainComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      title: ['test', [Validators.required, Validators.minLength(3), Validators.maxLength(80)]],
-      price: ['100', [Validators.min(10), Validators.max(10000), Validators.pattern(digitRegex)]],
-      date: [''],
+      title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(80)]],
+      number: ['', [Validators.min(1), Validators.max(100), Validators.pattern(digitRegex)]],
+      repeat: ['',[Validators.min(1), Validators.max(12)]],
       comment: ['']
     });
 
@@ -67,24 +67,25 @@ export class AddTrainComponent implements OnInit {
       return;
     }
 
-    const price = parseInt(this.form.value.price, 10);
+    const number = parseInt(this.form.value.number, 10);
 
-    if (isNaN(price) || price <= 0) {
+    if (isNaN(number) || number <= 0) {
       return;
     }
 
-    const date = this.form.value.date ? new Date(this.form.value.date) : new Date();
+    const repeat = this.form.value.repeat;
+    // const repeat = this.form.value.repeat ? new Date(this.form.value.repeat) : new Date();
 
-    const purchase: IPurchase = {
+    const training: ITraining = {
       title: this.form.value.title,
-      price,
-      date
+      number: number,
+      repeat: repeat
     };
 
     if (this.form.value.comment) {
-      purchase.comment = this.form.value.comment;
+      training.comment = this.form.value.comment;
     }
 
-    this.addPurchase.emit(purchase);
+    this.addTraining.emit(training);
   }
 }

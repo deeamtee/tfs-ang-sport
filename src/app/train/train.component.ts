@@ -2,8 +2,8 @@ import {Component, Input, OnInit} from '@angular/core';
 import {NEVER, Observable, Subject} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {debounceTime, distinctUntilChanged, filter, map, startWith, switchMap, takeUntil} from 'rxjs/operators';
-import {IPurchase} from '../model/i-purchase';
-import {IWallet} from '../model/iwallet';
+import {ITraining} from '../model/i-training';
+import {ITrain} from '../model/ITrain';
 import {TrainingService} from './training.service';
 import {TrainListService} from '../train-list/train-list.service';
 
@@ -13,19 +13,17 @@ import {TrainListService} from '../train-list/train-list.service';
   styleUrls: ['./train.component.css']
 })
 export class TrainComponent implements OnInit {
-  @Input() wallet: IWallet;
+  @Input() train: ITrain;
 
-  purchases$: Observable<IPurchase[]>;
-  balance$: Observable<number>;
-  total = 0;
-  isAddPurchaseOpen = false;
+  trains$: Observable<ITraining[]>;
+  isAddTrainingOpen = false;
   currentOpen = 0;
 
   private destroy$ = new Subject();
   private changeTitleSubject = new Subject<string>();
 
-  constructor(private purchasesService: TrainingService,
-              private walletListService: TrainListService,
+  constructor(private trainingService: TrainingService,
+              private trainListService: TrainListService,
               private route: ActivatedRoute,
               private router: Router) {
   }
@@ -33,29 +31,29 @@ export class TrainComponent implements OnInit {
   ngOnInit() {
     this.setUpNameChanges();
 
-    if (this.wallet) {
-      this.loadPurchases();
+    if (this.train) {
+      this.loadTrainings();
       return;
     }
 
     this.route.params.pipe(
       switchMap(({id}) => {
         if (id) {
-          return this.walletListService.getWalletById(id);
+          return this.trainListService.getTrainById(id);
         }
 
         return NEVER;
       }),
       takeUntil(this.destroy$)
     )
-      .subscribe(wallet => {
-        if (wallet) {
-          this.wallet = wallet;
-          this.loadPurchases();
+      .subscribe(train => {
+        if (train) {
+          this.train = train;
+          this.loadTrainings();
           return;
         }
 
-        this.router.navigate(['wallets']);
+        this.router.navigate(['trains']);
       });
   }
 
@@ -64,23 +62,23 @@ export class TrainComponent implements OnInit {
   }
 
   toggleAdd() {
-    this.isAddPurchaseOpen = !this.isAddPurchaseOpen;
+    this.isAddTrainingOpen = !this.isAddTrainingOpen;
   }
 
-  onAddPurchase(purchase: IPurchase) {
-    this.purchasesService.addPurchase(purchase, this.wallet.id)
+  onAddTraining(training: ITraining) {
+    this.trainingService.addTraining(training, this.train.id)
       .subscribe(() => {
         this.toggleAdd();
       });
   }
 
-  loadPurchases() {
-    this.purchases$ = this.purchasesService.loadPurchases(this.wallet.id);
-    this.balance$ = this.purchases$
-      .pipe(
-        map(purchases => this.wallet.amount - TrainingService.calcTotal(purchases)),
-        startWith(this.wallet.amount)
-      );
+  loadTrainings() {
+    this.trains$ = this.trainingService.loadTraining(this.train.id);
+    // this.balance$ = this.trains$
+    //   .pipe(
+    //     map(trainings => this.train.amount - TrainingService.calcTotal(trainings)),
+    //     startWith(this.train.amount)
+    //   );
   }
 
   isCurrentOpen(index: number) {
@@ -96,8 +94,8 @@ export class TrainComponent implements OnInit {
     this.currentOpen = index;
   }
 
-  onPreviewDelete(purchase: IPurchase) {
-    this.purchasesService.deletePurchase(purchase.id, this.wallet.id);
+  onPreviewDelete(training: ITraining) {
+    this.trainingService.deleteTraining(training.id, this.train.id);
   }
 
   changeTitle(title: string) {
@@ -112,7 +110,7 @@ export class TrainComponent implements OnInit {
         map(name => name.length <= 20 ? name : name.substr(0, 20)),
         debounceTime(1000),
         distinctUntilChanged(),
-        switchMap((name) => this.walletListService.updateWallet({...this.wallet, name}))
+        switchMap((name) => this.trainListService.updateTrain({...this.train, name}))
       )
       .subscribe((res) => {
         console.log('--- res', res);

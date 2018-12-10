@@ -1,4 +1,4 @@
-<div class="row justify-content-center">
+<div class="row justify-content-center" *ngIf="!(user$ | async); else login">
   <div class="col-lg-8">
     <h1 class="title">Log in</h1>
     <div class="alert alert-danger" role="alert" *ngIf="errorMessage">
@@ -33,7 +33,14 @@
   </div>
 
 </form>
-
-
   </div>
 </div>
+<ng-template #login>
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+<h1>{{(user$ | async)?.email}}, вы авторизованы!</h1>
+
+<div class="btn btn-success margin" (click)="onClick()">Перейти к тренировкам</div>
+  </div>
+</div>
+</ng-template>

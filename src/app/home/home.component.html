@@ -1,3 +1,8 @@
-<p>
-  home works!
-</p>
+<div class="main" *ngIf="(infos$ | async)">
+<h1>
+  {{(infos$ | async)?.name}}, хорошей тренировки!
+</h1>
+<div class="round">
+ <img src="{{(infos$ | async)?.photoURL}}" class="card-img">
+</div>
+</div>

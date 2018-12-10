@@ -1,35 +1,37 @@
-<div class="card" *ngIf="wallet; else loader">
+<div class="card" *ngIf="train; else loader">
   <div class="card-header"
        contenteditable="true"
        #title
        (input)="changeTitle(title.textContent)">
-    {{wallet.name}}
+    {{train.name}}
   </div>
   <div class="card-body">
     <div class="d-flex justify-content-between align-items-center">
       <p class="card-text m-0 pr-3">Нажмите, чтобы добавить тренировку</p>
       <button type="button"
               class="btn btn-primary"
-              [class.btn-primary]="!isAddPurchaseOpen"
-              [class.btn-danger]="isAddPurchaseOpen"
+              [class.btn-primary]="!isAddTrainingOpen"
+              [class.btn-danger]="isAddTrainingOpen"
               (click)="toggleAdd($event)">
-        {{isAddPurchaseOpen ? 'Отменить' : 'Добавить'}}
+        {{isAddTrainingOpen ? 'Отменить' : 'Добавить'}}
       </button>
     </div>
   </div>
-  <div class="card-body" *ngIf="isAddPurchaseOpen">
-    <tfs-add-train (addPurchase)="onAddPurchase($event)"></tfs-add-train>
+  <div class="card-body" *ngIf="isAddTrainingOpen">
+    <tfs-add-train (addTraining)="onAddTraining($event)"></tfs-add-train>
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item" *ngFor="let purchase of (purchases$ | async); let i=index">
-      <tfs-training-preview [purchase]="purchase"
+    <li class="list-group-item" *ngFor="let training of (trains$ | async); let i=index">
+      <tfs-training-preview [training]="training"
                             [isOpen]="isCurrentOpen(i)"
                             (previewClick)="setCurrentOpen(i)"
-                            (previewDelete)="onPreviewDelete(purchase)"
+                            (previewDelete)="onPreviewDelete(training)"
       ></tfs-training-preview>
     </li>
   </ul>
-
+  <!--<div class="card-footer text-center">-->
+    <!--Итого: <strong>{{balance$ | async | currency:'RUB'}}</strong>-->
+  <!--</div>-->
 </div>
 <ng-template #loader>
   <div class="loader">

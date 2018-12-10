@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {IPurchase} from '../../model/i-purchase';
+import {ITraining} from '../../model/i-training';
 
 @Component({
   selector: 'tfs-training-preview',
@@ -8,7 +8,7 @@ import {IPurchase} from '../../model/i-purchase';
 })
 export class TrainingPreviewComponent implements OnInit {
 
-  @Input() purchase: IPurchase;
+  @Input() training: ITraining;
   @Input() isOpen: boolean;
   @Output() previewClick = new EventEmitter<void>();
   @Output() previewDelete = new EventEmitter<void>();

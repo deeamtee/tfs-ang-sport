@@ -22,7 +22,9 @@ export class AuthService {
         if (user) {
           this.user$.next({
             uid: user.uid,
-            email: user.email
+            email: user.email,
+            name: user.displayName,
+            photoURL: user.photoURL
           });
 
           return;
@@ -75,7 +77,7 @@ export class AuthService {
       .auth
       .signOut()
       .then(() => {
-        if (this.router.url.startsWith('/wallets')) {
+        if (this.router.url.startsWith('/train')) {
           this.router.navigate(['/']);
         }
       });

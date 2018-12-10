@@ -1,13 +1,14 @@
 <div class="row">
-  <div class="col-md-6" *ngFor="let wallet of wallets$ | async">
-    <tfs-train [wallet]="wallet"></tfs-train>
+  <div class="col-md-12" *ngFor="let train of trains$ | async">
+    <tfs-train [train]="train"></tfs-train>
   </div>
 </div>
 
-<p *ngIf="!(wallets$ | async)?.length" class="empty">
-  <em>Кошельков нет.
+<p *ngIf="!(trains$ | async)?.length" class="empty">
+  <em>Тренировочек нет
   </em>
 </p>
 <p class="footer">
-  <button type="button" class="btn btn-link" (click)="addWallet()">Создать</button>
+  <button type="button" class="btn btn-link" (click)="addWallet()">Добавить тренировку</button>
+  <!--<button type="button" class="btn btn-link" (click)="deleteWallet()">Удалить тренировку</button>-->
 </p>

@@ -1,21 +1,19 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'useremail'
+  name: 'welcome'
 })
-export class UserPipe implements PipeTransform {
+export class WelcomePipe implements PipeTransform {
 
   transform(value: string): string {
-    if (value !== null && typeof value !== 'undefined'){
+    if (value !== null && typeof value !== 'undefined') {
 
       value = value.split('@')[0];
       value = value
-        .split('')
+        .split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
-      // console.log(value);
       return `${value}`;
     }
   }
-
 }

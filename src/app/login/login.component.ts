@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {ILogin} from '../model/i-login';
 import {FirebaseError} from 'firebase';
 import {Router} from '@angular/router';
+import {IUser} from '../model/i-user';
 
 const WRONG_PASSWORD_ERROR = 'auth/wrong-password';
 const ERROR_MESSAGE = {
@@ -20,10 +21,12 @@ const ERROR_MESSAGE = {
 export class LoginComponent implements OnInit {
   form: FormGroup;
   errorMessage = '';
+  user$: Observable<IUser>;
 
   constructor(private authService: AuthService,
               private formBuilder: FormBuilder,
-              private router: Router) {
+              private router: Router,
+              ) {
   }
 
   get email(): AbstractControl {
@@ -35,11 +38,15 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.user$ = this.authService.getUser$();
     this.form = this.formBuilder.group({
-      email: ['test@test.test', [Validators.required, Validators.email]],
-      password: ['test123', [Validators.required, Validators.minLength(6)]]
+      email: ['iceforcy@gmail.com', [Validators.required, Validators.email]],
+      password: ['2a3b04nn', [Validators.required, Validators.minLength(6)]]
     });
 
+  }
+  onClick(){
+    this.router.navigateByUrl('/train')
   }
 
   submit() {

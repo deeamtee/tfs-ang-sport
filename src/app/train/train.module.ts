@@ -5,13 +5,15 @@ import { TrainingPreviewComponent } from './training-preview/training-preview.co
 import {AddTrainModule} from '../add-train/add-train.module';
 import {PipeModule} from '../pipe/pipe.module';
 import {TrainingService} from './training.service';
+import {SettingsModule} from '../settings/settings.module';
 
 @NgModule({
   declarations: [TrainComponent, TrainingPreviewComponent],
   exports: [TrainComponent],
   imports: [
     CommonModule,
-    AddTrainModule
+    AddTrainModule,
+    SettingsModule
   ],
   providers: [
     TrainingService
